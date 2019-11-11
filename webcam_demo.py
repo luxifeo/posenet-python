@@ -53,13 +53,15 @@ def main():
             overlay_image = posenet.draw_skel_and_kp(
                 display_image, pose_scores, keypoint_scores, keypoint_coords,
                 min_pose_score=0.15, min_part_score=0.1)
-
-            cv2.imshow('posenet', overlay_image)
             frame_count += 1
+            avg_fps = 'fps: {:.2f}'.format(frame_count / (time.time() - start))
+            cv2.putText(overlay_image, avg_fps, (15, 15), cv2.FONT_ITALIC,
+                    0.5, (0, 0, 255), thickness=2)
+            cv2.imshow('posenet', overlay_image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        print('Average FPS: ', frame_count / (time.time() - start))
+#        print('Average FPS: ', frame_count / (time.time() - start))
 
 
 if __name__ == "__main__":

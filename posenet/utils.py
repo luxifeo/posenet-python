@@ -21,6 +21,16 @@ def _process_input(source_img, scale_factor=1.0, output_stride=16):
     input_img = input_img.reshape(1, target_height, target_width, 3)
     return input_img, source_img, scale
 
+def process_input(source_img, scale_factor=1.0, output_stride=16):
+    target_width, target_height = valid_resolution(
+        source_img.shape[1] * scale_factor, source_img.shape[0] * scale_factor, output_stride=output_stride)
+    scale = np.array([source_img.shape[0] / target_height, source_img.shape[1] / target_width])
+
+    input_img = cv2.resize(source_img, (target_width, target_height), interpolation=cv2.INTER_LINEAR)
+    input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB).astype(np.float32)
+    input_img = input_img * (2.0 / 255.0) - 1.0
+    input_img = input_img.reshape(1, target_height, target_width, 3)
+    return input_img, source_img, scale
 
 def read_cap(cap, scale_factor=1.0, output_stride=16):
     res, img = cap.read()
